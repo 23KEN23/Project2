@@ -22,11 +22,27 @@
             
             var queue = d3.queue();
             race_list.forEach(function(race_name){
+                //Queue all data files
                 queue.defer(d3.json, "RaceData_JSON/"+race_name+".json")
             });
             queue.awaitAll(function (error, race_jsons){
                 race_data = race_jsons;
+                //Name all races
+                for (i=0; i<race_list.length; i++){
+                    race_data[i].name = race_list[i];
+                }  
             });
+            
+            
+            
+            //TO DO initializeRace
+            //
+            // Called from "on click" event of a button
+            // Creates graph of clicked race with top 3 finishers selected
+            // Removes old graph stuff
+            // Creates clickable buttons for each racer
+            
+            
             
             
             //Create Race Buttons        
