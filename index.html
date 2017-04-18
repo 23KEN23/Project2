@@ -11,7 +11,10 @@
         <svg id="Races" width="1600" height="50">
         </svg>
         <script>
+            //List of Races in F1 2011
             var race_list = ["Belgium","Canada","EUGP","Germany","Hungary","India","Italy","Japan","Korea","Monaco","Silverstone","Singapore","Spain"]
+            
+            var buttons = [];
             
             var race_tabs = d3.select("#Races");
             
@@ -19,15 +22,20 @@
                                 .domain([0,race_list.length])
                                 .range([0,race_tabs.attr("width")]);
             
+            // Add Rectangle Buttons with Text
             for (i=0; i<race_list.length; i++){
-                race_tabs.append("rect")
+                var rect;
+                var text;
+                
+                rect = race_tabs.append("rect")
+                            .attr("id", race_list[i])
                             .attr("x",tabsScale(i))
                             .attr("y",5)
                             .attr("width",100)
                             .attr("height",40)
                             .style("fill", "red")
                 
-                race_tabs.append("text")
+                text = race_tabs.append("text")
                             .attr("x", tabsScale(i))
                             .attr("y", 25)
                             .attr("text-anchor", "start")
@@ -35,8 +43,23 @@
                             .style("font-size", "15pt")
                             .text(race_list[i]);
                 
+                buttons.push(rect);
             }
-
+            
+            
+            // Add event Listeners
+            buttons.forEach(function (b) {
+                b.on("mouseover", function(){
+                    console.log("hi")
+                    b.style("fill", "blue")
+                });
+                
+                b.on("mouseout", function(){
+                    b.style("fill", "red")
+                });
+            });
+            
+            
             
         </script>
         
