@@ -10,23 +10,37 @@
         <h3>Races</h3>
         <svg id="Races" width="1600" height="50">
         </svg>
+        <br>
+        <svg id="Graph" width="1600" height="800">
+        </svg>
         <script>
             //List of Races in F1 2011
             var race_list = ["Belgium","Canada","EUGP","Germany","Hungary","India","Italy","Japan","Korea","Monaco","Silverstone","Singapore","Spain"]
             
+            //Load Data Files
+            var race_data
+            
+            var queue = d3.queue();
+            race_list.forEach(function(race_name){
+                queue.defer(d3.json, "RaceData_JSON/"+race_name+".json")
+            });
+            queue.awaitAll(function (error, race_jsons){
+                race_data = race_jsons;
+            });
+            
+            
+            //Create Race Buttons        
             var buttons = [];
-            
             var race_tabs = d3.select("#Races");
-            
             var tabsScale = d3.scaleLinear()
                                 .domain([0,race_list.length])
                                 .range([0,race_tabs.attr("width")]);
             
-            // Add Rectangle Buttons with Text
             for (i=0; i<race_list.length; i++){
                 var rect;
                 var text;
                 
+                // Add Rectangles
                 rect = race_tabs.append("rect")
                             .attr("id", race_list[i])
                             .attr("x",tabsScale(i))
@@ -34,7 +48,7 @@
                             .attr("width",100)
                             .attr("height",40)
                             .style("fill", "red")
-                
+                // Overlay Text
                 text = race_tabs.append("text")
                             .attr("x", tabsScale(i))
                             .attr("y", 25)
@@ -57,26 +71,14 @@
                 b.on("mouseout", function(){
                     b.style("fill", "red")
                 });
+                
+                b.on("click", function(){
+                    //initializeRace
+                })
             });
             
             
             
-        </script>
-        
-        
-        
-        <script>
-            var race;
-
-            d3.queue()
-            .defer(d3.json, "RaceData_JSON/Germany.json")
-            .await(function (error, race_json){
-                race = race_json;
-                
-                
-            })
-            
-        </script>
-        
+        </script>        
     </body>
 </html>
