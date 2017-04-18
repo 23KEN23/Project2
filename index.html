@@ -31,14 +31,11 @@
         <h2>F1 Race Results</h2>
         <h3>Races</h3>
         <div id="buttonHolder"></div>
-        <svg id="Races" width="1600" height="50">
-        </svg>
         <br>
         <svg id="Graph" width="1600" height="800">
         </svg>
         <script>
             //List of Races in F1 2011
-            
             var race_list = ["Belgium","Canada","EUGP","Germany","Hungary","India","Italy","Japan","Korea","Monaco","Silverstone","Singapore","Spain"]
             
             //Load Data Files
@@ -57,78 +54,43 @@
                 }
             });
             
-            
-            //Adding buttons above SVG
-            d3.select("#buttonHolder")
-            .selectAll("input")
-            .data(race_list)
-            .enter()
-            .append("input")
-            .attr("type","button")
-            .attr("class","button")
-            .attr("value", function (d){console.log ("hello"); return d; } );
-            
-            //TO DO initializeRace
+ 
+            //Function to initialize graph when button is clicked
             //
             // Called from "on click" event of a button
             // Creates graph of clicked race with top 3 finishers selected
             // Removes old graph stuff
             // Creates clickable buttons for each racer
+            var testy;
+            var testy2;
             
-            
-            
-            
-            //Create Race Buttons  
-            
-            /*
-            var buttons = [];
-            var race_tabs = d3.select("#Races");
-            var tabsScale = d3.scaleLinear()
-                                .domain([0,race_list.length])
-                                .range([0,race_tabs.attr("width")]);
-            
-            for (i=0; i<race_list.length; i++){
-                var rect;
-                var text;
-                
-                // Add Rectangles
-                rect = race_tabs.append("rect")
-                            .attr("id", race_list[i])
-                            .attr("x",tabsScale(i))
-                            .attr("y",5)
-                            .attr("width",100)
-                            .attr("height",40)
-                            .style("fill", "red")
-                // Overlay Text
-                text = race_tabs.append("text")
-                            .attr("x", tabsScale(i))
-                            .attr("y", 25)
-                            .attr("text-anchor", "start")
-                            .attr("alignment-baseline", "central")
-                            .style("font-size", "15pt")
-                            .text(race_list[i]);
-                
-                buttons.push(rect);
+            function initializeRace(racename) {
+                var race = race_data.filter(function(d) {return d.name == racename;})
+                race = race[0];
+                testy = race;
+                for (var driver in race) {
+                    if (driver != "name"){
+                        console.log(driver);
+                        race[driver]
+                    }
+                }
             }
             
             
-            // Add event Listeners
-            buttons.forEach(function (b) {
-                b.on("mouseover", function(){
-                    console.log("hi")
-                    b.style("fill", "blue")
-                });
-                
-                b.on("mouseout", function(){
-                    b.style("fill", "red")
-                });
-                
-                b.on("click", function(){
-                    //initializeRace
-                })
-            });
-            */
-            //var buttonNames = ["button 1", "button 2", "button 3", "button 4"]
+            
+            
+            //Adding buttons above SVG
+            var button_holder = d3.select("#buttonHolder");
+            var buttons = button_holder.selectAll("input").data(race_list);
+            
+            buttons.enter()
+                    .append("input")
+                    .attr("type","button")
+                    .attr("class","button")
+                    .attr("value", function (d){return d; } )
+                    .on("click", function(d){initializeRace(d); });
+            
+
             
             
             
