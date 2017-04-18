@@ -2,12 +2,35 @@
     <head>
         <title>Project 2</title>
         <script src="https://d3js.org/d3.v4.min.js"></script>
-        <style> svg { border: solid #ccc 1px; } </style>
+        <style> svg { border: solid #ccc 1px; } 
+        .button{
+            background-color: white;
+            border: none;
+            color: #4A4A4A;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            border: 2px solid #008CBA;
+            }
+            
+            .button:hover
+            {
+                background-color: #008CBA;
+                color: white;
+            }
+        </style>
     </head>
 
     <body>
         <h2>F1 Race Results</h2>
         <h3>Races</h3>
+        <div id="buttonHolder"></div>
         <svg id="Races" width="1600" height="50">
         </svg>
         <br>
@@ -15,6 +38,7 @@
         </svg>
         <script>
             //List of Races in F1 2011
+            
             var race_list = ["Belgium","Canada","EUGP","Germany","Hungary","India","Italy","Japan","Korea","Monaco","Silverstone","Singapore","Spain"]
             
             //Load Data Files
@@ -30,10 +54,19 @@
                 //Name all races
                 for (i=0; i<race_list.length; i++){
                     race_data[i].name = race_list[i];
-                }  
+                }
             });
             
             
+            //Adding buttons above SVG
+            d3.select("#buttonHolder")
+            .selectAll("input")
+            .data(race_list)
+            .enter()
+            .append("input")
+            .attr("type","button")
+            .attr("class","button")
+            .attr("value", function (d){console.log ("hello"); return d; } );
             
             //TO DO initializeRace
             //
@@ -45,7 +78,9 @@
             
             
             
-            //Create Race Buttons        
+            //Create Race Buttons  
+            
+            /*
             var buttons = [];
             var race_tabs = d3.select("#Races");
             var tabsScale = d3.scaleLinear()
@@ -92,6 +127,8 @@
                     //initializeRace
                 })
             });
+            */
+            //var buttonNames = ["button 1", "button 2", "button 3", "button 4"]
             
             
             
