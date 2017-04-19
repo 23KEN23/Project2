@@ -2,41 +2,76 @@
     <head>
         <title>Project 2</title>
         <script src="https://d3js.org/d3.v4.min.js"></script>
-        <style> svg { border: solid #ccc 1px; } 
-        .button{
-            background-color: white;
-            border: none;
-            color: #4A4A4A;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            -webkit-transition-duration: 0.4s; /* Safari */
-            transition-duration: 0.4s;
-            border: 2px solid #008CBA;
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <style> 
+            
+            body
+            {
+                font-family: sans-serif;
+                background-color: #404040;
             }
             
-            .button:hover
-            {
-                background-color: #008CBA;
-                color: white;
+            svg { 
+                width: 60%;
+                border: solid #ccc 0.75px;
+                margin-left: 40px;
+            } 
+            
+            .button{
+                background-color: transparent;
+                color: #CCCCCC;
+                text-align: center;
+                padding: 16px;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 14px;
+                margin: 4px 2px;
+                cursor: pointer;
+                -webkit-transition-duration: 0.4s; /* Safari */
+                transition-duration: 0.4s;
+                border: 1px solid;
+                outline: none;
+                width:100%;
+                border-radius: 6px;
+                font-weight: 100;
             }
+            
+            #buttonHolder
+            {
+                display: inline-block;
+                float: left;
+                width:150px;
+                margin: 20px;
+            }
+            
+            #holder
+            {
+                display: inline-block;
+                float: left;
+            }
+            
+            h2, h3{
+                
+                color:white;
+            }
+            
         </style>
     </head>
 
     <body>
         <h2>F1 Race Results</h2>
         <h3>Races</h3>
-        <div id="buttonHolder"></div>
-        <br>
-        <svg id="Graph" width="1600" height="800">
-        </svg>
+        <div id="holder">
+            <div id="buttonHolder"></div>
+            <br>
+            <svg id="Graph" width="1600" height="800">
+            </svg>
+        </div>
         <script>
             //List of Races in F1 2011
             var race_list = ["Belgium","Canada","EUGP","Germany","Hungary","India","Italy","Japan","Korea","Monaco","Silverstone","Singapore","Spain"]
+            
+            var race_color = ["#ee6d66","#f49cc8","#a866ee","#D23232","#7166ee","#3080e8","#107c91","#16c79e","#d59f80","#FFBF00","#FF7900","#56A902","#66d7ee"]
             
             //Load Data Files
             var race_data;
@@ -90,15 +125,47 @@
             var button_holder = d3.select("#buttonHolder");
             var buttons = button_holder.selectAll("input").data(race_list);
             
+            var buttonClicked = false;
             buttons.enter()
-                    .append("input")
-                    .attr("type","button")
-                    .attr("class","button")
-                    .attr("value", function (d){return d; } )
-                    .on("click", function(d){initializeRace(d); });
-            
-
-            
+            .append("input")
+            .attr("type","button")
+            .attr("class","button")
+            .attr("clicked","false")
+            //.attr("id",function(d,i){return "button"+i})
+            .attr("value", function (d){return d; })
+            .style("border-color", function(d,i){return race_color[i];})
+            .on("click", function(d,i)
+                {
+                    if(d3.select(this).attr("clicked")=="false")
+                        {
+                            d3.select(this).attr("clicked","true")
+                            d3.select(this).style("background-color",race_color[i]);
+                            initializeRace(d);   
+                        }
+                    else
+                        {
+                            d3.select(this).attr("clicked","false")
+                            d3.select(this).style("background-color","transparent");
+                            //initializeRace(d); 
+                        }
+            })
+            .on("mouseover", function(d,i)
+               {
+                d3.select(this).style("background-color",race_color[i]);
+                d3.select(this).style("color","white");
+                d3.select(this).style("font-weight",500);
+            })
+            .on("mouseout",function(d,i)
+               {
+                   if(d3.select(this).attr("clicked")=="false")
+                    {
+                        d3.select(this).style("background-color","transparent"); 
+                        d3.select(this).style("color","#CCCCCC"); 
+                        d3.select(this).style("font-weight",100);
+                    }
+            });
+          
+           //console.log(buttons) 
             
             
         </script>        
