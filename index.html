@@ -39,20 +39,27 @@
             var race_list = ["Belgium","Canada","EUGP","Germany","Hungary","India","Italy","Japan","Korea","Monaco","Silverstone","Singapore","Spain"]
             
             //Load Data Files
-            var race_data
+            var race_data;
+            var start_data;
+            var result_data;
             
             var queue = d3.queue();
             race_list.forEach(function(race_name){
                 //Queue all data files
                 queue.defer(d3.json, "RaceData_JSON/"+race_name+".json")
+                queue.defer(d3.json, "RaceStart_JSON/"+race_name+".json")
+                queue.defer(d3.json, "RaceResults_JSON/"+race_name+".json")
             });
-            queue.awaitAll(function (error, race_jsons){
-                race_data = race_jsons;
+            queue.awaitAll(function (error, data){
+                race_data = data;
                 //Name all races
                 for (i=0; i<race_list.length; i++){
                     race_data[i].name = race_list[i];
                 }
             });
+            
+            
+            
             
  
             //Function to initialize graph when button is clicked
