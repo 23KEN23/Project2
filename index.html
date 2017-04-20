@@ -270,6 +270,7 @@
                         .attr("stroke", "white")
                         .attr("cx", function(d) { return lapScale(d.lap); })
                         .attr("cy", function(d) { return positionScale(d.position); });
+                        .attr("cy", function(d) { return positionScale(d.position); });
 
                     /* initially set all lines to no show */
                     d3.selectAll(".line").style("opacity", "0");
