@@ -138,33 +138,51 @@
                 {
                     if(d3.select(this).attr("clicked")=="false")
                         {
+                            clearButtons()
                             d3.select(this).attr("clicked","true")
-                            d3.select(this).style("background-color",race_color[i]);
+                            makeButtonColored(this,i)
                             initializeRace(d);   
                         }
                     else
                         {
                             d3.select(this).attr("clicked","false")
-                            d3.select(this).style("background-color","transparent");
+                            makeButtonTransparent(this)
                             //initializeRace(d); 
                         }
             })
             .on("mouseover", function(d,i)
                {
-                d3.select(this).style("background-color",race_color[i]);
-                d3.select(this).style("color","white");
-                d3.select(this).style("font-weight",500);
+                makeButtonColored(this,i)
             })
-            .on("mouseout",function(d,i)
+            .on("mouseout",function(d)
                {
                    if(d3.select(this).attr("clicked")=="false")
                     {
-                        d3.select(this).style("background-color","transparent"); 
-                        d3.select(this).style("color","#CCCCCC"); 
-                        d3.select(this).style("font-weight",100);
+                        makeButtonTransparent(this);
                     }
             });
           
+            function clearButtons()
+            {
+                button_holder.selectAll("input").
+                style("background-color","transparent")
+                .attr("clicked","false");
+            }
+            
+            function makeButtonColored(btn, i)
+            {
+                d3.select(btn).style("background-color",race_color[i]);
+                d3.select(btn).style("color","white");
+                d3.select(btn).style("font-weight",500); 
+            }
+            
+            function makeButtonTransparent(btn)
+            {
+                d3.select(btn).style("background-color","transparent"); 
+                d3.select(btn).style("color","#CCCCCC"); 
+                d3.select(btn).style("font-weight",100);
+            }
+            
            //console.log(buttons) 
             
             
