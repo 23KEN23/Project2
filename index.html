@@ -20,7 +20,7 @@
                 background-color: transparent;
                 color: #CCCCCC;
                 text-align: center;
-                padding: 16px;
+                padding: 14px;
                 text-decoration: none;
                 display: inline-block;
                 font-size: 14px;
@@ -48,6 +48,7 @@
                 display: inline-block;
                 float: left;
                 width:100%;
+                
 
             }
             
@@ -56,11 +57,22 @@
                 height:100px;
                 padding-left: 30px;
                 padding-top: 30px;
+                text-align: center;
             }
             
             h2, h3{
                 
                 color:white;
+                vertical-align: middle;
+                
+            }
+            
+            h3
+            {
+                font-family: Palatino;
+                font-weight: 200;
+                line-height: 24px;
+                letter-spacing: 1.3px;
             }
             
             .lapAxis text
@@ -84,13 +96,13 @@
     <body>
 
         <div id="headerHolder">
-            <h2>F1 Race Results</h2>
+            <h2>F1 Race Results 2011</h2>
             <h3></h3>
         </div>
         <div id="holder">
             <div id="buttonHolder"></div>
             <br>
-            <svg id="Graph" width="1000" height="750">
+            <svg id="Graph" width="1000" height="700">
             </svg>
         </div>
         <script>
@@ -269,7 +281,7 @@
                             d3.select(this).style("stroke-width", "5");
                             d3.selectAll(".driver" + i)
                                 .style("opacity", "1");
-                            d3.select("h3").text("Driver: "+raceDrivers[i]); 
+                            d3.select("h3").text("Driver: "+raceDrivers[i].slice(0,4)+raceDrivers[i].slice(4,raceDrivers.length).toLowerCase()); 
                             d3.select(this).style("cursor","pointer")
                        
 
