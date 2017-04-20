@@ -47,7 +47,13 @@
             {
                 display: inline-block;
                 float: left;
-                width: 100%;
+                width:100%;
+
+            }
+            
+            #headerHolder
+            {
+                height:100px;
             }
             
             h2, h3{
@@ -55,17 +61,34 @@
                 color:white;
             }
             
+            .lapAxis text
+            {
+                fill:white;
+            }
+            
+            .lapAxis line
+            {
+                stroke:white;
+            }
+            
+            .lapAxis path
+            {
+                stroke:transparent;
+            }
+            
         </style>
     </head>
 
     <body>
-        <h2>F1 Race Results</h2>
-        <h3>Races</h3>
-        <p id="driverName"></p>
+
+        <div id="headerHolder">
+            <h2>F1 Race Results</h2>
+            <h3></h3>
+        </div>
         <div id="holder">
             <div id="buttonHolder"></div>
             <br>
-            <svg id="Graph" width="1000" height="800">
+            <svg id="Graph" width="1000" height="750">
             </svg>
         </div>
         <script>
@@ -136,14 +159,16 @@
                  */
                 var lapScale = d3.scaleLinear().domain([1, maxNumberOfLaps]).range([20, d3.select("#Graph").attr("width")-20]); // left & right padding of 20px 
 
-                var lapAxis = d3.axisTop(lapScale);
+                var lapAxis = d3.axisTop(lapScale).ticks(50);
+
 
                 var positionScale = d3.scaleLinear().domain([1, raceDrivers.length]).range([40, d3.select("#Graph").attr("height")-20]);
+
                 
                 var driverScale = d3.scaleOrdinal().domain([raceDrivers]).range(["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]);
                 // console.log(driverScale(race[raceDrivers[0]]));
 
-                svgPlot.append("g").call(lapAxis).attr("transform", "translate(0,20)");
+                svgPlot.append("g").call(lapAxis).attr("transform", "translate(0,30)").attr("class", "lapAxis");
             
                 for(var i = 1; i <= maxNumberOfLaps; i++) { // get position of Drivers at Each Lap
                     var driversInLap = {}; // will be sorted in ascending order by timeBehindLeader
@@ -183,6 +208,7 @@
                     .x(function(d) { return lapScale(d.lap); })
                     .y(function(d) { return positionScale(d.position) });
 
+                
                raceDrivers.forEach(function(d, i) {
                     var driverPositions = []; /* will correspond to y-values to later scale */
                     var nLapsDriverIsInRace = Object.keys(race[d]).length;
@@ -242,6 +268,16 @@
                         .attr("stroke", "white")
                         .attr("cx", function(d) { return lapScale(d.lap); })
                         .attr("cy", function(d) { return positionScale(d.position); });
+                       .on("mouseover", function(d)
+                        {
+                            d3.select("h3").text(raceDrivers[i]); 
+                            console.log(raceDrivers[i])
+                       
+                        })
+                        .on("mouseout", function(d)
+                        {
+                            d3.select("h3").text("");   
+                        });
 
                     /* initially set all lines to no show */
                     d3.selectAll(".line").style("opacity", "0");
@@ -278,44 +314,62 @@
             
             var buttonClicked = false;
             buttons.enter()
-                .append("input")
-                .attr("type","button")
-                .attr("class","button")
-                .attr("clicked","false")
-                //.attr("id",function(d,i){return "button"+i})
-                .attr("value", function (d){return d; })
-                .style("border-color", function(d,i){return race_color[i];})
-                .on("click", function(d,i)
-                    {
-                        if(d3.select(this).attr("clicked")=="false")
-                            {
-                                d3.select(this).attr("clicked","true")
-                                d3.select(this).style("background-color",race_color[i]);
-                                initializeRace(d);   
-                            }
-                        else
-                            {
-                                d3.select(this).attr("clicked","false")
-                                d3.select(this).style("background-color","transparent");
-                                //initializeRace(d); 
-                            }
-                })
-                .on("mouseover", function(d,i)
-                   {
-                    d3.select(this).style("background-color",race_color[i]);
-                    d3.select(this).style("color","white");
-                    d3.select(this).style("font-weight",500);
-                })
-                .on("mouseout",function(d,i)
-                   {
-                       if(d3.select(this).attr("clicked")=="false")
+            .append("input")
+            .attr("type","button")
+            .attr("class","button")
+            .attr("clicked","false")
+            //.attr("id",function(d,i){return "button"+i})
+            .attr("value", function (d){return d; })
+            .style("border-color", function(d,i){return race_color[i];})
+            .on("click", function(d,i)
+                {
+                    if(d3.select(this).attr("clicked")=="false")
                         {
-                            d3.select(this).style("background-color","transparent"); 
-                            d3.select(this).style("color","#CCCCCC"); 
-                            d3.select(this).style("font-weight",100);
+                            clearButtons()
+                            d3.select(this).attr("clicked","true")
+                            makeButtonColored(this,i)
+                            initializeRace(d);   
                         }
-                });
+                    else
+                        {
+                            d3.select(this).attr("clicked","false")
+                            makeButtonTransparent(this)
+                            //initializeRace(d); 
+                        }
+            })
+            .on("mouseover", function(d,i)
+               {
+                makeButtonColored(this,i)
+            })
+            .on("mouseout",function(d)
+               {
+                   if(d3.select(this).attr("clicked")=="false")
+                    {
+                        makeButtonTransparent(this);
+                    }
+            });
           
+            function clearButtons()
+            {
+                button_holder.selectAll("input").
+                style("background-color","transparent")
+                .attr("clicked","false");
+            }
+            
+            function makeButtonColored(btn, i)
+            {
+                d3.select(btn).style("background-color",race_color[i]);
+                d3.select(btn).style("color","white");
+                d3.select(btn).style("font-weight",500); 
+            }
+            
+            function makeButtonTransparent(btn)
+            {
+                d3.select(btn).style("background-color","transparent"); 
+                d3.select(btn).style("color","#CCCCCC"); 
+                d3.select(btn).style("font-weight",100);
+            }
+            
            //console.log(buttons) 
             
             
