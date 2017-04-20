@@ -209,6 +209,7 @@
                     .y(function(d) { return positionScale(d.position) });
 
                 
+               
                raceDrivers.forEach(function(d, i) {
                     var driverPositions = []; /* will correspond to y-values to later scale */
                     var nLapsDriverIsInRace = Object.keys(race[d]).length;
@@ -227,12 +228,12 @@
                         "lap": lap, 
                         "position" : Number(position)});
 
-
                    } 
                    
                    /* once exited the for-loop, have driver's time from leader */
 
                    var pathString = lineGenerator(driverPositions);
+
                    svgPlot.append("path")
                        .attr("d", pathString)
                        .attr("class", "line")
@@ -245,7 +246,7 @@
                                 .style("opacity", ".2");
                             d3.select(this).style("opacity", "1");
                             d3.select(this).style("stroke-width", "5");
-                            d3.selectAll("circle")
+                            d3.selectAll(".driver" + i)
                                 .style("opacity", "1");
                             d3.select("h3").text(raceDrivers[i]); 
                        
@@ -261,15 +262,16 @@
                             d3.select("h3").text("");  
                        });
 
+                    
                     svgPlot.selectAll("dot")
                         .data(driverPositions)
                         .enter()
                         .append("circle")
                         .attr("r", "2")
-                        .attr("class", d)
+                        .attr("class", "driver" + i)
                         .attr("stroke", "white")
                         .attr("cx", function(d) { return lapScale(d.lap); })
-                        .attr("cy", function(d) { return positionScale(d.position); });
+                        .attr("cy", function(d) { return positionScale(d.position); })
                         .attr("cy", function(d) { return positionScale(d.position); });
 
                     /* initially set all lines to no show */
