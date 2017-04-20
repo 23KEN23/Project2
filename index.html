@@ -104,24 +104,41 @@
             var start_data;
             var result_data;
             
-            var queue = d3.queue();
-            race_list.forEach(function(race_name){
-                //Queue all data files
-                queue.defer(d3.json, "RaceData_JSON/"+race_name+".json")
-                // queue.defer(d3.json, "RaceStart_JSON/"+race_name+".json")
-                // queue.defer(d3.json, "RaceResults_JSON/"+race_name+".json")
-            });
-            queue.awaitAll(function (error, data){
-                race_data = data;
-                //Name all races
-                for (i=0; i<race_list.length; i++){
-                    race_data[i].name = race_list[i];
-                }
-            });
+            var queue1 = d3.queue();
+            var queue2 = d3.queue();
+            var queue3 = d3.queue();
             
+            function loadData(){
+                race_list.forEach(function(race_name){
+                    queue1.defer(d3.json, "RaceData_JSON/"+race_name+".json");
+                    queue2.defer(d3.json, "RaceStart_JSON/"+race_name+".json");
+                    queue3.defer(d3.json, "RaceResults_JSON/"+race_name+".json")
+                });
+                queue1.awaitAll(function (error, data){
+                    race_data = data;
+                    //Name all races
+                    for (i=0; i<race_list.length; i++){
+                        race_data[i].name = race_list[i];
+                    }
+                });
+                queue2.awaitAll(function (error, data){
+                    start_data = data;
+                    //Name all races
+                    for (i=0; i<race_list.length; i++){
+                        race_data[i].name = race_list[i];
+                    }
+                });
+                queue3.awaitAll(function (error, data){
+                    result_data = data;
+                    //Name all races
+                    for (i=0; i<race_list.length; i++){
+                        race_data[i].name = race_list[i];
+                    }
+                });
+            }
+          
             
-            
-            
+            loadData();
  
             //Function to initialize graph when button is clicked
             //
