@@ -247,6 +247,8 @@
                         "lap": lap, 
                         "position" : Number(position)});
 
+                        allDriversData[d] = driverPositions;
+
                    } 
                    
                    /* once exited the for-loop, have driver's time from leader */
@@ -302,18 +304,24 @@
                animatelines();
             }
             
+            /* for each line, need to know the driver's end position to multiply by duration */
+
             function animatelines() {
+                
                 d3.selectAll(".line")
                     .style("opacity", "1");
 
                 d3.selectAll(".line").each(function(d, i) {
+                    var currDriver = raceDrivers[i];
+                    var endPosition = allDriversData[currDriver][allDriversData[currDriver].length-1].position;
+
                     var totalLength = d3.select("#line" + i).node().getTotalLength();
 
                     d3.selectAll("#line" + i)
                         .attr("stroke-dasharray", totalLength + " " + totalLength)
                         .attr("stroke-dashoffset", totalLength)
                         .transition()
-                        .duration(1000) /* depends on finishing position */
+                        .duration(1000*endPosition) /* depends on finishing position */
                         .delay(100*i)
                         .ease(d3.easeLinear)
                         .attr("stroke-dashoffset", "0");
