@@ -113,7 +113,7 @@
             
             //Load Data Files
             var race_data;
-            var start_data;
+            var start_data = [];
             var result_data = [];
             
             var queue1 = d3.queue();
@@ -134,10 +134,8 @@
                     }
                 });
                 queue2.awaitAll(function (error, data){
-                    start_data = data;
-                    //Name all races
-                    for (i=0; i<race_list.length; i++){
-                        start_data[i].name = race_list[i];
+                    for (i=0; i<data.length; i++){
+                        start_data.push(data[i].MRData.RaceTable.Races[0].QualifyingResults);
                     }
                 });
                 queue3.awaitAll(function (error, data){
