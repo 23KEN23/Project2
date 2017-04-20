@@ -12,7 +12,6 @@
             }
             
             svg { 
-                width: 60%;
                 border: solid #ccc 0.75px;
                 margin-left: 40px;
             } 
@@ -48,6 +47,7 @@
             {
                 display: inline-block;
                 float: left;
+                width: 100%;
             }
             
             h2, h3{
@@ -64,7 +64,7 @@
         <div id="holder">
             <div id="buttonHolder"></div>
             <br>
-            <svg id="Graph" width="1600" height="800">
+            <svg id="Graph" width="1000" height="800">
             </svg>
         </div>
         <script>
@@ -104,6 +104,7 @@
             // Removes old graph stuff
             // Creates clickable buttons for each racer
             var race;
+            var raceDrivers;
             var lapDataDict = {};
             var allDriversData = {};
                 
@@ -116,7 +117,7 @@
                 race = race_data.filter(function(d) {return d.name == racename;})[0]
                 
                 var maxNumberOfLaps = 0; // to later use for horizontal scale
-                var raceDrivers = Object.keys(race);
+                raceDrivers = Object.keys(race);
                 raceDrivers.splice(-1); //remove "name" element in array
                 
                 /* loop through racers to get max number of laps in particular race */
@@ -136,7 +137,7 @@
 
                 var lapAxis = d3.axisTop(lapScale);
 
-                var positionScale = d3.scaleLinear().domain([1, raceDrivers.length]).range([25, d3.select("#Graph").attr("height")-25]);
+                var positionScale = d3.scaleLinear().domain([1, raceDrivers.length]).range([40, d3.select("#Graph").attr("height")-20]);
                 
                 var driverScale = d3.scaleOrdinal().domain([raceDrivers]).range(["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]);
                 // console.log(driverScale(race[raceDrivers[0]]));
@@ -181,7 +182,7 @@
                     .x(function(d) { return lapScale(d.lap); })
                     .y(function(d) { return positionScale(d.position) });
 
-               raceDrivers.forEach(function(d) {
+               raceDrivers.forEach(function(d, i) {
                     var driverPositions = []; /* will correspond to y-values to later scale */
                     var nLapsDriverIsInRace = Object.keys(race[d]).length;
 
@@ -207,13 +208,37 @@
                    var pathString = lineGenerator(driverPositions);
                    svgPlot.append("path")
                        .attr("d", pathString)
+                       .attr("class", "line")
+                       .attr("id", "line" + i)
                        .attr("stroke", driverScale(d))
                        .attr("stroke-width", 3)
                        .attr("fill", "none");
+
+                    /* initially set all lines to no show */
+                    d3.selectAll(".line").style("opacity", "0");
+
                }); 
+               animatelines();
             }
             
-            
+            function animatelines() {
+                d3.selectAll(".line")
+                    .style("opacity", "1");
+
+                d3.selectAll(".line").each(function(d, i) {
+                    var totalLength = d3.select("#line" + i).node().getTotalLength();
+
+                    d3.selectAll("#line" + i)
+                        .attr("stroke-dasharray", totalLength + " " + totalLength)
+                        .attr("stroke-dashoffset", totalLength)
+                        .transition()
+                        .duration(5000)
+                        .delay(100*i)
+                        .ease(d3.easeLinear)
+                        .attr("stroke-dashoffset", "0");
+                }); 
+
+            }
             
             
             
