@@ -380,7 +380,7 @@
                         /* check which dot we're at */
                         if (data.isLast) { // last dot on driver's path
                             // check driver's status, if not finished make fill red
-                            var finished = getDriverStatus(driver);
+                            var finished = getDriversStatus(driver);
 
                             if (finished) {
                                 if (data.lapType == "PIT"){
