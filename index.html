@@ -208,7 +208,7 @@
                  * positionScale => vertical
                  * driverScale => for unique driver-path colors
                  */
-                var lapScale = d3.scaleLinear().domain([1, maxNumberOfLaps]).range([20, d3.select("#Graph").attr("width")-200]); // left & right padding of 20px 
+                var lapScale = d3.scaleLinear().domain([1, maxNumberOfLaps]).range([20, d3.select("#Graph").attr("width")-250]); // left & right padding of 20px 
                 var lapAxis = d3.axisTop(lapScale).ticks(50);
 
 
@@ -289,18 +289,23 @@
                    
                    /* once exited the for-loop, have driver's time from leader */
 
+                   var textWidth;
                    var pathString = lineGenerator(driverPositions);
                    var drivername = results[i].Driver.givenName[0]+". "+results[i].Driver.familyName;
                    svgPlot.append("text")
                    .attr("class","text")
                    .attr("id","text" + i)
-                   .attr("x", d3.select("#Graph").attr("width")-145)
+                   .attr("x", d3.select("#Graph").attr("width")-185)
                     .attr("y", positionScale(results[i].position)+5)
                     .text(results[i].position+") "+drivername)
                    .attr("font-family", "Verdana")
                     .attr("font-size", "13px")
                     .attr("fill", "white")
                    .style("opacity",0.8)
+                   .each(function()
+                        {
+                       textWidth=this.getComputedTextLength()
+                   })
                    
                    //.style("opacity",0);
                    
@@ -313,11 +318,28 @@
                    .style("fill","red")*/
                    
                    svgPlot.append("svg:image")
-                   .attr("x", d3.select("#Graph").attr("width")-180)
+                   .attr("x", d3.select("#Graph").attr("width")-220)
                     .attr("y", positionScale(results[i].position)-8)
                    .attr("width",22.34)
                    .attr("height",15)
                    .attr("xlink:href","Flags/"+results[i].Driver.nationality+".png")
+                   
+                   svgPlot.append("circle")
+                    .attr("r", 4)
+                   .attr("class","statusCircle")
+                   .attr("id","status"+i)
+                    .style("fill", function(){
+                       if(getDriversStatus(drivername)==true)
+                           {
+                               return "green";
+                           }
+                       else
+                           {
+                               return "red"
+                           }
+                   })
+                    .attr("cx", d3.select("#Graph").attr("width")-150+textWidth)
+                    .attr("cy",positionScale(results[i].position));
                    
                    
                    
@@ -340,8 +362,6 @@
                             d3.select(this).style("cursor","pointer")
                             d3.select("#text"+getDriverIndexInResultsArray(d)).style("font-weight",600)
                             d3.select("#text"+getDriverIndexInResultsArray(d)).style("opacity",1);
-                       
-
                        })
                        .on("mouseout", function() {
                             d3.selectAll(".line")
@@ -352,6 +372,8 @@
                                 .style("opacity", "0");
                             d3.select("#text"+getDriverIndexInResultsArray(d)).style("font-weight",300)
                             d3.select("#text"+getDriverIndexInResultsArray(d)).style("opacity",0.8);
+                            d3.selectAll(".statusCircle").style("opacity","1")
+                            
                        });
 
 
@@ -421,6 +443,7 @@
                     /* initially set all lines to no show */
                     d3.selectAll(".line").style("opacity", "0");
                     d3.selectAll("circle").style("opacity", "0");
+                   d3.selectAll(".statusCircle").style("opacity","1")
 
                }); 
                animatelines();
@@ -518,7 +541,8 @@
             }
             
             function getDriverIndexInResultsArray(driver) {
-                console.log(driver)
+                if(driver!=undefined)
+                    {
                         var driverFamilyName = driver.toLowerCase();
                         for (var i = 0; i < results.length; i++) {
                             if (driverFamilyName.includes(results[i]["Driver"]["driverId"])) {
@@ -526,7 +550,7 @@
                             }
                         }
                     }
-            
+            }
             
         </script>        
     </body>
