@@ -321,14 +321,9 @@
                                 .style("opacity", ".2");
                             d3.select(this).style("opacity", "1");
                             d3.select(this).style("stroke-width", "5");
-<<<<<<< Updated upstream
-                            d3.selectAll(".driver" + i)
-                                .style("opacity", "1"); 
-=======
+
                             d3.selectAll("#driver" + i)
                                 .style("opacity", "1");
-                            d3.select("h3").text("Driver: "+raceDrivers[i]); 
->>>>>>> Stashed changes
                             d3.select(this).style("cursor","pointer")
                             //d3.select("#text"+i).style("opacity",1);
                        
@@ -344,8 +339,6 @@
                             //d3.select("#text"+i).style("opacity",0);
                        });
 
-<<<<<<< Updated upstream
-=======
 
                     function setRadiusForLapType(type) {
                         if (type == "PIT") {
@@ -382,7 +375,6 @@
                         }
                     }
                     
->>>>>>> Stashed changes
                     svgPlot.selectAll("dot")
                         .data(driverPositions)
                         .enter()
