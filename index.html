@@ -84,7 +84,7 @@
             
             .text
             {
-                font-family: Palatino;
+                font-family: Verdana;
                 font-weight: 200;
                 line-height: 24px;
                 letter-spacing: 1.3px;
@@ -266,11 +266,12 @@
                    svgPlot.append("text")
                    .attr("class","text")
                    .attr("id","text" + i)
-                   .attr("x", d3.select("#Graph").attr("width")-175)
-                    .attr("y", positionScale(results[i].position)+5) .text(results[i].position+") "+raceDrivers[i].slice(0,4)+raceDrivers[i].slice(4,raceDrivers.length).toLowerCase())
-                   .attr("font-family", "Palatino")
-                    .attr("font-size", "14px")
+                   .attr("x", d3.select("#Graph").attr("width")-145)
+                    .attr("y", positionScale(results[i].position)+5) .text(raceDrivers[i].slice(0,4)+raceDrivers[i].slice(4,raceDrivers.length).toLowerCase())
+                   .attr("font-family", "Verdana")
+                    .attr("font-size", "13px")
                     .attr("fill", "white")
+                   
                    //.style("opacity",0);
                    
                    
@@ -280,6 +281,14 @@
                    .attr("width",35)
                    .attr("height",23)
                    .style("fill","red")*/
+                   
+                   svgPlot.append("svg:image")
+                   .attr("x", d3.select("#Graph").attr("width")-180)
+                    .attr("y", positionScale(results[i].position)-8)
+                   .attr("width",22.34)
+                   .attr("height",15)
+                   .attr("xlink:href","Flags/"+results[i].Driver.nationality+".png")
+                   
                    
                    
 
