@@ -268,6 +268,8 @@
                     for (var lap = 1; lap <= nLapsDriverIsInRace; lap++) { // loop through each lap available
                         var dataAtLap = lapDataDict[lap];
 
+                        console.log(d)
+
                         /* find this driver's position at the current lap */
 
                         var position = dataAtLap.getKeyByValue(d);
@@ -306,6 +308,7 @@
                         {
                        textWidth=this.getComputedTextLength()
                    })
+
                    
                    //.style("opacity",0);
                    
@@ -335,7 +338,11 @@
                            }
                        else
                            {
-                               return "red"
+                               if(results[getDriverIndexInResultsArray(drivername)]["status"].toLowerCase().includes("lap"))
+                                   {
+                                       return "orange"
+                                   }
+                                    return "red"
                            }
                    })
                     .attr("cx", d3.select("#Graph").attr("width")-150+textWidth)
@@ -362,6 +369,7 @@
                             d3.select(this).style("cursor","pointer")
                             d3.select("#text"+getDriverIndexInResultsArray(d)).style("font-weight",600)
                             d3.select("#text"+getDriverIndexInResultsArray(d)).style("opacity",1);
+
                        })
                        .on("mouseout", function() {
                             d3.selectAll(".line")
@@ -377,17 +385,15 @@
                        });
 
 
-                    function setRadiusForLapType(type) {
+                    function setRadiusForLapType(driver, type) {
                         if (type == "PIT") {
                             return "8";
                         }
                         else {
-                            return "2";
+                            return "4";
                         }
                     }
 
-
-            
 
                     function getDriversStatus(driver) {
                         //console.log(driver);
@@ -426,13 +432,37 @@
                         .data(driverPositions)
                         .enter()
                         .append("circle")
-                            .attr("r", function(d) { return setRadiusForLapType(d.lapType); })
+                            .attr("r", function(data) { return setRadiusForLapType(d, data.lapType); })
                             .attr("class", function(d) { return "driver" + d.lapType; })
                             .attr("id", "driver" + i)
                             .attr("stroke", "white")
                             .style("fill", function(data) { return setFillForLapType(d, data); })
                             .attr("cx", function(d) { return lapScale(d.lap); })
-                            .attr("cy", function(d) { return positionScale(d.position); });
+                            .attr("cy", function(d) { return positionScale(d.position); })
+                            .on("mouseover", function() {
+                                d3.selectAll(".line")
+                                    .style("opacity", ".2")
+                                d3.select("#line" + i)
+                                    .style("opacity", "1")
+                                    .style("stroke-width", "5")
+                                d3.selectAll("#driver" + i)
+                                    .style("opacity", "1");
+                                d3.select(this).style("cursor","pointer")
+                                d3.select("#text"+getDriverIndexInResultsArray(d)).style("font-weight",600);
+                                d3.select("#text"+getDriverIndexInResultsArray(d)).style("opacity",1);
+                                d3.selectAll(".statusCircle").style("opacity","1")
+                            })
+                            .on("mouseout", function() {
+                                d3.selectAll(".line")
+                                    .style("opacity", "1")
+                                    .style("stroke-width", "3");
+                           
+                                d3.selectAll("circle")
+                                    .style("opacity", "0");
+                                d3.select("#text"+getDriverIndexInResultsArray(d)).style("font-weight",300)
+                                d3.select("#text"+getDriverIndexInResultsArray(d)).style("opacity",0.8);
+                                d3.selectAll(".statusCircle").style("opacity","1")
+                            });
 
                     
                     /* if have dots that are pit stops, add 'P' text within circle */
