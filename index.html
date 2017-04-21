@@ -96,6 +96,7 @@
     <body>
 
         <div id="headerHolder">
+            <svg src="Visuals/F1_logo1.svg"></svg>
             <h2>F1 Race Results 2011</h2>
         </div>
        <div id="buttonHolder"></div>
@@ -267,7 +268,8 @@
                    .attr("class","text")
                    .attr("id","text" + i)
                    .attr("x", d3.select("#Graph").attr("width")-145)
-                    .attr("y", positionScale(results[i].position)+5) .text(raceDrivers[i].slice(0,4)+raceDrivers[i].slice(4,raceDrivers.length).toLowerCase())
+                    .attr("y", positionScale(results[i].position)+5)
+                    .text(results[i].Driver.givenName[0]+". "+results[i].Driver.familyName)
                    .attr("font-family", "Verdana")
                     .attr("font-size", "13px")
                     .attr("fill", "white")
