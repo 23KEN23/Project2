@@ -361,31 +361,39 @@
                         }
                     }
 
-                    function getDriversStatus(driver) {
-                        var driverFamilyName = driver.split('. ')[1].toLowerCase();
+
+                    function getDriverIndexInResultsArray(driver) {
+                        var driverFamilyName = driver.toLowerCase();
+
                         for (var i = 0; i < results.length; i++) {
-                            if results[i]["Driver"]
+                            if (driverFamilyName.includes(results[i]["Driver"]["driverId"])) {
+                                return i;
+                            }
                         }
+                    }
+
+                    function getDriversStatus(driver) {
+                        return results[getDriverIndexInResultsArray(driver)]["status"] == "Finished" ? true : false;
                     }
 
                     function setFillForLapType(driver, data) {
                         /* check which dot we're at */
                         if (data.isLast) { // last dot on driver's path
                             // check driver's status, if not finished make fill red
-                            var finished = getDriversStatus(driver);
-                            console.log(finished);
+                            var finished = getDriverIndexInResultsArray(driver);
+                            console.log(driver + ": " + finished); 
 
-                            if (finished) {
-                                if (data.lapType == "PIT"){
-                                    return driverScale(driver);
-                                }
-                                else {
-                                    return "black";
-                                }
-                            }
-                            else {
-                                return "red"
-                            }
+                            // if (finished) {
+                            //     if (data.lapType == "PIT"){
+                            //         return driverScale(driver);
+                            //     }
+                            //     else {
+                            //         return "black";
+                            //     }
+                            // }
+                            // else {
+                            //     return "red"
+                            // }
                         }  
                         else {  
                             if (data.lapType == "PIT"){
