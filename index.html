@@ -288,13 +288,13 @@
                    /* once exited the for-loop, have driver's time from leader */
 
                    var pathString = lineGenerator(driverPositions);
-                   
+                   var drivername = results[i].Driver.givenName[0]+". "+results[i].Driver.familyName;
                    svgPlot.append("text")
                    .attr("class","text")
                    .attr("id","text" + i)
                    .attr("x", d3.select("#Graph").attr("width")-145)
                     .attr("y", positionScale(results[i].position)+5)
-                    .text(results[i].Driver.givenName[0]+". "+results[i].Driver.familyName)
+                    .text(drivername)
                    .attr("font-family", "Verdana")
                     .attr("font-size", "13px")
                     .attr("fill", "white")
@@ -336,8 +336,8 @@
                             d3.selectAll("#driver" + i)
                                 .style("opacity", "1");
                             d3.select(this).style("cursor","pointer")
-                            d3.select("#text"+i).style("font-weight",600)
-                            d3.select("#text"+i).style("opacity",1);
+                            d3.select("#text"+getDriverIndexInResultsArray(drivername)).style("font-weight",600)
+                            d3.select("#text"+getDriverIndexInResultsArray(drivername)).style("opacity",1);
                        
 
                        })
@@ -362,17 +362,10 @@
                     }
 
 
-                    function getDriverIndexInResultsArray(driver) {
-                        var driverFamilyName = driver.toLowerCase();
-
-                        for (var i = 0; i < results.length; i++) {
-                            if (driverFamilyName.includes(results[i]["Driver"]["driverId"])) {
-                                return i;
-                            }
-                        }
-                    }
+            
 
                     function getDriversStatus(driver) {
+                        console.log(driver);
                         return results[getDriverIndexInResultsArray(driver)]["status"] == "Finished" ? true : false;
                     }
 
@@ -520,6 +513,16 @@
                 d3.select(btn).style("color","#CCCCCC"); 
                 d3.select(btn).style("font-weight",100);
             }
+            
+            function getDriverIndexInResultsArray(driver) {
+                        var driverFamilyName = driver.toLowerCase();
+                        for (var i = 0; i < results.length; i++) {
+                            if (driverFamilyName.includes(results[i]["Driver"]["driverId"])) {
+                                console.log(i)
+                                return i;
+                            }
+                        }
+                    }
             
             
         </script>        
