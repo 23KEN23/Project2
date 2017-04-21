@@ -171,6 +171,8 @@
             var raceDrivers;
             var lapDataDict = {};
             var allDriversData = {};
+            
+            
                 
             function initializeRace(racename) {
                 /* refresh svg from previous race contents */
@@ -327,7 +329,7 @@
                        .attr("stroke", driverScale(d))
                        .attr("stroke-width", 3)
                        .attr("fill", "none")
-                       .on("mouseover", function(d) {
+                       .on("mouseover", function() {
                             d3.selectAll(".line")
                                 .style("opacity", ".2");
                             d3.select(this).style("opacity", "1");
@@ -336,19 +338,20 @@
                             d3.selectAll("#driver" + i)
                                 .style("opacity", "1");
                             d3.select(this).style("cursor","pointer")
-                            d3.select("#text"+getDriverIndexInResultsArray(drivername)).style("font-weight",600)
-                            d3.select("#text"+getDriverIndexInResultsArray(drivername)).style("opacity",1);
+                            d3.select("#text"+getDriverIndexInResultsArray(d)).style("font-weight",600)
+                            d3.select("#text"+getDriverIndexInResultsArray(d)).style("opacity",1);
                        
 
                        })
-                       .on("mouseout", function(d) {
+                       .on("mouseout", function() {
                             d3.selectAll(".line")
                                 .style("opacity", "1")
                                 .style("stroke-width", "3");
                            
                             d3.selectAll("circle")
                                 .style("opacity", "0");
-                            //d3.select("#text"+i).style("opacity",0);
+                            d3.select("#text"+getDriverIndexInResultsArray(d)).style("font-weight",300)
+                            d3.select("#text"+getDriverIndexInResultsArray(d)).style("opacity",0.8);
                        });
 
 
@@ -365,7 +368,7 @@
             
 
                     function getDriversStatus(driver) {
-                        console.log(driver);
+                        //console.log(driver);
                         return results[getDriverIndexInResultsArray(driver)]["status"] == "Finished" ? true : false;
                     }
 
@@ -515,10 +518,10 @@
             }
             
             function getDriverIndexInResultsArray(driver) {
+                console.log(driver)
                         var driverFamilyName = driver.toLowerCase();
                         for (var i = 0; i < results.length; i++) {
                             if (driverFamilyName.includes(results[i]["Driver"]["driverId"])) {
-                                console.log(i)
                                 return i;
                             }
                         }
