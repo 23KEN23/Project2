@@ -11,7 +11,7 @@
                 background-color: #404040;
             }
             
-            svg { 
+            #Graph { 
                 border: solid #ccc 0.75px;
             } 
             
@@ -45,6 +45,14 @@
             }
             
             #svgHolder
+            {
+                /*display: inline-block;
+                float: left;*/
+                width:100%;
+                text-align: center;
+            }
+            
+            #legendHolder
             {
                 /*display: inline-block;
                 float: left;*/
@@ -201,8 +209,6 @@
                         // }
                     }
                 }
-                // console.log(maxTimeBehindLeader);
-
                 /* Scales Used in SVG Graph:
                  * lapScale => horizontal
                  * positionScale => vertical
@@ -268,7 +274,6 @@
                     for (var lap = 1; lap <= nLapsDriverIsInRace; lap++) { // loop through each lap available
                         var dataAtLap = lapDataDict[lap];
 
-                        console.log(d)
 
                         /* find this driver's position at the current lap */
 
