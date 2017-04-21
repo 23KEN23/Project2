@@ -175,6 +175,8 @@
                
                 
                 var maxNumberOfLaps = 0; // to later use for horizontal scale
+                var maxTimeBehindLeader = 0;
+
                 raceDrivers = Object.keys(race);
                 raceDrivers.splice(-1); //remove "name" element in array
                 
@@ -183,8 +185,13 @@
                     if (driver != "name"){
                         var numLaps = Object.keys(race[driver]).length;
                         maxNumberOfLaps = numLaps > maxNumberOfLaps ? numLaps : maxNumberOfLaps;
+
+                        // for(var i = 1; i <= numLaps; i++) {
+                        //     maxTimeBehindLeader = Number(race[driver][i][1]) > maxTimeBehindLeader ? Number(race[driver][i][1]) : maxTimeBehindLeader;
+                        // }
                     }
                 }
+                // console.log(maxTimeBehindLeader);
 
                 /* Scales Used in SVG Graph:
                  * lapScale => horizontal
@@ -197,7 +204,8 @@
 
                 var positionScale = d3.scaleLinear().domain([1, raceDrivers.length]).range([40, d3.select("#Graph").attr("height")-20]);
 
-                
+                // var timeScale = d3.scaleLinear().domain([0, maxTimeBehindLeader]).range([40, d3.select("#Graph").attr("height")-20]);
+
                 var driverScale = d3.scaleOrdinal().domain([raceDrivers]).range(["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]);
 
                 svgPlot.append("g").call(lapAxis).attr("transform", "translate(0,30)").attr("class", "lapAxis");
@@ -210,7 +218,7 @@
                             continue;
                         }
                         if (i <= Object.keys(race[driver]).length) {
-                            if (race[driver][i][0] == 1 && race[driver][i][1] == "PIT") {
+                            if (race[driver][i][1] == "PIT") {
                                 timeBehindLeader = Number(race[driver][i][3]);
                             }
                             else {
@@ -252,9 +260,16 @@
 
                         var position = dataAtLap.getKeyByValue(d);
 
-                       driverPositions.push({
-                        "lap": lap, 
-                        "position" : Number(position)});
+                        
+                        var lapType = race[d][lap][1] == "PIT" ? "PIT" : "NA";
+
+                        var isLastVal = lap == nLapsDriverIsInRace ? true : false;
+
+                        driverPositions.push({
+                            "lap": lap, 
+                            "position" : Number(position),
+                            "lapType" : lapType,
+                            "isLast" :  isLastVal });
 
                         allDriversData[d] = driverPositions;
 
@@ -306,8 +321,14 @@
                                 .style("opacity", ".2");
                             d3.select(this).style("opacity", "1");
                             d3.select(this).style("stroke-width", "5");
+<<<<<<< Updated upstream
                             d3.selectAll(".driver" + i)
                                 .style("opacity", "1"); 
+=======
+                            d3.selectAll("#driver" + i)
+                                .style("opacity", "1");
+                            d3.select("h3").text("Driver: "+raceDrivers[i]); 
+>>>>>>> Stashed changes
                             d3.select(this).style("cursor","pointer")
                             //d3.select("#text"+i).style("opacity",1);
                        
@@ -323,16 +344,62 @@
                             //d3.select("#text"+i).style("opacity",0);
                        });
 
+<<<<<<< Updated upstream
+=======
+
+                    function setRadiusForLapType(type) {
+                        if (type == "PIT") {
+                            return "8";
+                        }
+                        else {
+                            return "2";
+                        }
+                    }
+
+                    function setFillForLapType(driver, data) {
+                        /* check which dot we're at */
+                        if (data.isLast) { // last dot on driver's path
+                            // check driver's status, if not finished make fill red
+                            if (finished) {
+                                if (type == "PIT"){
+                                    return driverScale(driver);
+                                }
+                                else {
+                                    return "black";
+                                }
+                            }
+                            else {
+                                return "red"
+                            }
+                        }  
+                        else {  
+                            if (type == "PIT"){
+                                return driverScale(driver);
+                            }
+                            else {
+                                return "black";
+                            }
+                        }
+                    }
+                    
+>>>>>>> Stashed changes
                     svgPlot.selectAll("dot")
                         .data(driverPositions)
                         .enter()
                         .append("circle")
-                        .attr("r", "2")
-                        .attr("class", "driver" + i)
-                        .attr("stroke", "white")
-                        .attr("cx", function(d) { return lapScale(d.lap); })
-                        .attr("cy", function(d) { return positionScale(d.position); })
-                        .attr("cy", function(d) { return positionScale(d.position); });
+                            .attr("r", function(d) { return setRadiusForLapType(d.lapType); })
+                            .attr("class", function(d) { return "driver" + d.lapType; })
+                            .attr("id", "driver" + i)
+                            .attr("stroke", "white")
+                            .style("fill", function(data) { return setFillForLapType(d, data); })
+                            .attr("cx", function(d) { return lapScale(d.lap); })
+                            .attr("cy", function(d) { return positionScale(d.position); });
+
+                    
+                    /* if have dots that are pit stops, add 'P' text within circle */
+                    
+                    // var pitDots = svgPlot.selectAll(".driverPIT");
+                    
 
                     /* initially set all lines to no show */
                     d3.selectAll(".line").style("opacity", "0");
@@ -359,8 +426,8 @@
                         .attr("stroke-dasharray", totalLength + " " + totalLength)
                         .attr("stroke-dashoffset", totalLength)
                         .transition()
-                        .duration(1000*endPosition) /* depends on finishing position */
-                        .delay(100*i)
+                        .duration(500*endPosition) /* depends on finishing position */
+                        // .delay(100)
                         .ease(d3.easeLinear)
                         .attr("stroke-dashoffset", "0");
                 }); 
