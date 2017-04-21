@@ -296,7 +296,7 @@
                    .attr("id","text" + i)
                    .attr("x", d3.select("#Graph").attr("width")-145)
                     .attr("y", positionScale(results[i].position)+5)
-                    .text(drivername)
+                    .text(results[i].position+") "+drivername)
                    .attr("font-family", "Verdana")
                     .attr("font-size", "13px")
                     .attr("fill", "white")
