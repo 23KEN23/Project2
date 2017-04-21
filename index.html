@@ -251,6 +251,8 @@
                         }
                     }
                }
+
+
                var lineGenerator = d3.line()
                     .x(function(d) { return lapScale(d.lap); })
                     .y(function(d) { return positionScale(d.position) });
@@ -359,12 +361,22 @@
                         }
                     }
 
+                    function getDriversStatus(driver) {
+                        var driverFamilyName = driver.split('. ')[1].toLowerCase();
+                        for (var i = 0; i < results.length; i++) {
+                            if results[i]["Driver"]
+                        }
+                    }
+
                     function setFillForLapType(driver, data) {
                         /* check which dot we're at */
                         if (data.isLast) { // last dot on driver's path
                             // check driver's status, if not finished make fill red
+                            var finished = getDriversStatus(driver);
+                            console.log(finished);
+
                             if (finished) {
-                                if (type == "PIT"){
+                                if (data.lapType == "PIT"){
                                     return driverScale(driver);
                                 }
                                 else {
@@ -376,7 +388,7 @@
                             }
                         }  
                         else {  
-                            if (type == "PIT"){
+                            if (data.lapType == "PIT"){
                                 return driverScale(driver);
                             }
                             else {
